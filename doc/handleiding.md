@@ -444,8 +444,10 @@ ip address | grep 'scope global' | grep 'inet '
 
 Type het adres tot aan de `/` over, en type er de poort achter (meestal `:8000`).
 
-Als je Visual Studio Code gebruikt, kun je een live server opstarten met de Live Preview extensie. Navigeer naar `generated/index.html` en kies _show preview_.
+Als je Visual Studio Code gebruikt, kun je een live server opstarten met de Live Preview extensie.
+Verander eerst de [livePreview.serverRoot](vscode://settings/livePreview.serverRoot) instelling naar `generated/` en start dan de server vanuit het Command Pallette (F1) met 'Live Preview: Start Server'.
 Het voordeel hiervan is dat de pagina automatisch wordt herladen wanneer de site veranderd.
+
 Om je veranderingen in markdown snel om te zetten naar html, kun je een build task instellen door het volgende in `.vscode/tasks.json` te zetten:
 
 ```json5
