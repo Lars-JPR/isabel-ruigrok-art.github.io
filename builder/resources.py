@@ -74,7 +74,7 @@ class Resource:
         def fn(url: str):
             if not is_relative_url(url):
                 return url
-            return str((Path('/') / self.DIRECTORY / self.slug / url).resolve())
+            return '/'.join(('', *self.DIRECTORY.parts, self.slug, url))
 
         doc.rewrite_urls(fn)
         return doc

@@ -4,6 +4,7 @@ import copy
 import dataclasses
 import datetime
 import functools
+import posixpath
 import urllib.parse
 from pathlib import Path
 from typing import Callable, Iterable, Any, ClassVar
@@ -89,9 +90,9 @@ def process_headline_image(body: ET.Element) -> None:
 def mutate_image_to_picture(el: ET.Element) -> ET.Element:
     """ change an <img> element to a <picture> element with <source> and <img> children in-place. """
     src = urllib.parse.urlsplit(el.get('src'))
-    path = Path(src.path)
-    webp_url = urllib.parse.urlunsplit(src._replace(path=str(path.with_suffix('.webp'))))
-    fallback_url = urllib.parse.urlunsplit(src._replace(path=str(path.with_suffix('.jpg')))) if path.suffix == '.webp' else el.get('src')
+    root, ext = posixpath.splitext(src.path)
+    webp_url = urllib.parse.urlunsplit(src._replace(path=root+'.webp'))
+    fallback_url = urllib.parse.urlunsplit(src._replace(path=root+'.jpg')) if ext == '.webp' else el.get('src')
 
     el.tag = 'picture'
     ET.SubElement(el, 'source', srcset=webp_url, type='image/webp')
@@ -202,4 +203,4 @@ class Document:
             for src in self.iter_img_srcs(root=self.primary_image):
                 if (url := urllib.parse.urlsplit(src)).netloc:
                     continue
-                yield url._replace(path=str(Path(url.path).with_suffix('.webp')))
+                yield url._replace(path=posixpath.splitext(url.path)[0] + '.webp')
